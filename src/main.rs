@@ -5,17 +5,20 @@ use std::net::SocketAddr;
 use tokio::sync::Mutex;
 use tokio::time::{self, Duration};
 
+mod services::WifiService;
+use services::WifiService::WifiService;
 
 #[tokio::main]
 async fn main() {
-    let addr = SocketAddr::from(([127, 0, 0, 1], 8080)); // Adresse IP et port à utiliser
+    let mut wifi = WifiService::new("", ""); //ssid, passwd
+    let addr = SocketAddr::from((wifi.host, wifi.port)); // Adresse IP et port à utiliser
+
     let make_svc = make_service_fn(|_conn| {
         let state = State::default();
         async { Ok::<_, Infallible>(service_fn(move |req| handle_request(req, state.clone()))) }
     });
 
     let server = Server::bind(&addr).serve(make_svc);
-
     if let Err(e) = server.await {
         eprintln!("Server error: {}", e);
     }
