@@ -4,59 +4,7 @@ use std::convert::Infallible;
 use std::net::SocketAddr;
 use tokio::sync::Mutex;
 use tokio::time::{self, Duration};
-use esp8266_hal::prelude::*;
-use esp8266_hal::wifi::station::Station;
-use esp8266_hal::wifi::Mac;
-use nb::block;
 
-fn ConnectWifi() {
-    let dp = pac::Peripherals::take().unwrap();
-
-    // Configure les broches GPIO nécessaires pour la connexion Wi-Fi
-    let mut gpio = dp.GPIO.split();
-    let _ = gpio.gpio2.into_function::<esp8266_hal::gpio::Input>();
-    let _ = gpio.gpio0.into_function::<esp8266_hal::gpio::Input>();
-    let _ = gpio.gpio15.into_function::<esp8266_hal::gpio::Input>();
-
-    // Initialise le matériel Wi-Fi
-    let mut wifi = Station::new(dp.TMRA, dp.TMRB, dp.WIFI, dp.SYSCON, dp.CLOCK);
-
-    // Configure le réseau Wi-Fi
-    let ssid = "Nom_de_votre_Réseau";
-    let password = "Mot_de_passe_de_votre_Réseau";
-
-    wifi.connect(
-        ssid,
-        password,
-        None,
-        &Mac::broadcast(),
-        None,
-        None,
-    )
-        .unwrap();
-
-    // Attendez que la connexion soit établie
-    loop {
-        match wifi.get_status() {
-            Ok(status) => {
-                if status == esp8266_hal::wifi::StationStatus::GotIp {
-                    println!("Connecté à Internet via Wi-Fi");
-                    break;
-                } else {
-                    // Attendez un peu avant de vérifier à nouveau l'état
-                    // de la connexion.
-                    cortex_m::asm::delay(100_000);
-                }
-            }
-            Err(_) => {
-                println!("Échec de la connexion Wi-Fi");
-                break;
-            }
-        }
-    }
-
-    // Votre code pour interagir avec Internet va ici...
-}
 
 #[tokio::main]
 async fn main() {
