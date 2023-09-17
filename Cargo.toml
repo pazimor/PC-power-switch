@@ -7,6 +7,4 @@ edition = "2021"
 
 [dependencies]
 esp8266-hal = "*"
-hyper = "0.14"
-hyper-tls = "0.5"
-tokio = { version = "1", features = ["full"] }
+rouille = "3.0"
