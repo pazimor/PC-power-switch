@@ -1,5 +1,15 @@
-# PC-power-switch
-I bougth a new pc but .... <br>
-I can't activate WOL ...<br>
-so ...<br>
-I did my own Switch with PI-PICO W and a relay<br>
+## PC-power-switch
+
+WOL is not working on my PC
+
+Got a Proof of concept in microPython need to implement it in Rust
+
+TODO list:
+
+*   API Rest
+    *   start the computer
+    *   shutdown the computer
+    *   ping the computer
+*   case
+    *   3D model
+    *   3D print
